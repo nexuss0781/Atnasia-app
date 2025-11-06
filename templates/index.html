@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eternal Love for Atnesiya</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Existing CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-family: 'Montserrat', sans-serif;
+            position: relative;
+        }
+        
+        /* Animated background particles */
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* Header with animated name */
+        .header {
+            text-align: center;
+            padding: 60px 0 40px;
+            position: relative;
+        }
+        
+        .name-container {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .atnesiya-name {
+            font-family: 'Dancing Script', cursive;
+            font-size: 8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #ff758c, #ff7eb3, #d47af2, #a18cd1);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradientShift 8s ease infinite, pulse 2s infinite;
+            text-shadow: 0 10px 30px rgba(161, 140, 209, 0.4);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .name-container::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            background: linear-gradient(45deg, #ff758c, #a18cd1);
+            border-radius: 20px;
+            filter: blur(40px);
+            opacity: 0.7;
+            z-index: -1;
+        }
+        
+        /* Romantic subtitle */
+        .subtitle {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-style: italic;
+            margin-top: 20px;
+            color: #f8d5e4;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            letter-spacing: 3px;
+        }
+        
+        /* Heart animation container */
+        .hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        /* Love letter section */
+        .love-letter {
+            background: rgba(20, 15, 40, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 25px;
+            padding: 50px;
+            margin: 50px auto;
+            max-width: 800px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 117, 140, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .love-letter::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 60%, rgba(161, 140, 209, 0.2) 100%);
+            z-index: -1;
+        }
+        
+        .letter-content {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            line-height: 2;
+            text-align: center;
+            color: #f9e0ee;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .letter-content p {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .letter-content p::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ff758c, transparent);
+            margin: 15px auto;
+        }
+        
+        .signature {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: #ff7eb3;
+            margin-top: 30px;
+            text-align: right;
+            font-weight: 700;
+        }
+        
+        /* Interactive elements */
+        .interactive-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 50px 0;
+            flex-wrap: wrap;
+        }
+        
+        .interactive-item {
+            background: rgba(30, 20, 60, 0.6);
+            border-radius: 20px;
+            padding: 25px;
+            width: 220px;
+            text-align: center;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(161, 140, 209, 0.4);
+            cursor: pointer;
+        }
+        
+        .interactive-item:hover {
+            transform: translateY(-10px) scale(1.05);
+            background: rgba(50, 30, 90, 0.7);
+            box-shadow: 0 10px 30px rgba(161, 140, 209, 0.4);
+            border-color: #ff7eb3;
+        }
+        
+        .interactive-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, #ff758c, #a18cd1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .interactive-title {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: #f8d5e4;
+        }
+        
+        .interactive-desc {
+            font-size: 0.95rem;
+            color: #d8b4e2;
+        }
+        
+        /* Chat button */
+        .chat-button-container {
+            text-align: center;
+            margin: 60px 0 40px;
+        }
+        
+        .chat-btn {
+            background: linear-gradient(45deg, #ff758c, #a18cd1);
+            color: white;
+            border: none;
+            padding: 20px 60px;
+            font-size: 1.6rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(255, 117, 140, 0.5);
+            letter-spacing: 1px;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+        }
+        
+        .chat-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: 0.6s;
+        }
+        
+        .chat-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255, 117, 140, 0.7);
+            letter-spacing: 2px;
+        }
+        
+        .chat-btn:hover::before {
+            left: 100%;
+        }
+        
+        .chat-btn i {
+            margin-right: 10px;
+            animation: pulse 2s infinite;
+        }
+        
+        /* Floating elements */
+        .floating {
+            animation: floating 6s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        
+        /* Gradient animation */
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Pulse animation */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .atnesiya-name {
+                font-size: 5rem;
+            }
+            .subtitle {
+                font-size: 1.5rem;
+            }
+            .love-letter {
+                padding: 30px 20px;
+            }
+            .letter-content {
+                font-size: 1.2rem;
+            }
+            .interactive-container {
+                gap: 15px;
+            }
+            .interactive-item {
+                width: 150px;
+                padding: 15px;
+            }
+            .chat-btn {
+                padding: 16px 40px;
+                font-size: 1.3rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .atnesiya-name {
+                font-size: 3.5rem;
+            }
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            .love-letter {
+                padding: 20px 15px;
+                margin: 30px 10px;
+            }
+            .letter-content {
+                font-size: 1rem;
+            }
+            .interactive-item {
+                width: 100%;
+                margin: 10px 0;
+            }
+            .chat-btn {
+                padding: 14px 30px;
+                font-size: 1.1rem;
+            }
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(30, 20, 60, 0.3);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(#ff758c, #a18cd1);
+            border-radius: 10px;
+        }
+
+        /* Login Modal CSS */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            margin: auto;
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+            position: relative;
+        }
+
+        .close-button {
+            color: #aaa;
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-content h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: #ff758c;
+            margin-bottom: 25px;
+        }
+
+        .modal-content input[type="password"] {
+            width: calc(100% - 40px);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            border: 1px solid #302b63;
+            background-color: #0f0c29;
+            color: #fff;
+            font-size: 1.1rem;
+            outline: none;
+        }
+
+        .modal-content input[type="password"]:focus {
+            border-color: #ff758c;
+            box-shadow: 0 0 10px rgba(255, 117, 140, 0.3);
+        }
+
+        .user-selection {
+            margin-bottom: 25px;
+        }
+
+        .user-selection label {
+            margin: 0 15px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #d47af2;
+        }
+
+        .user-selection input[type="radio"] {
+            margin-right: 8px;
+            transform: scale(1.2);
+            accent-color: #ff758c;
+        }
+
+        .login-button {
+            background: linear-gradient(45deg, #ff758c, #a18cd1);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 117, 140, 0.5);
+        }
+
+        .login-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 117, 140, 0.7);
+        }
+
+        .error-message {
+            color: #ff4d7a;
+            margin-top: 15px;
+            font-size: 1rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particles"></canvas>
+    <div class="hearts" id="hearts"></div>
+    
+    <div class="container">
+        <header class="header">
+            <div class="name-container floating">
+                <h1 class="atnesiya-name">Atnesiya</h1>
+            </div>
+            <div class="subtitle">My eternal love, my everything</div>
+        </header>
+        
+        <div class="love-letter">
+            <div class="letter-content">
+                <p>From the moment our paths crossed, my universe aligned in perfect harmony. Your presence is the melody that plays in my heart every single day.</p>
+                <p>When I look into your eyes, I see galaxies of possibilities, dreams waiting to unfold, and a future brighter than any star in the night sky.</p>
+                <p>Your laughter is my favorite symphony, your smile my greatest treasure. With you, every ordinary moment becomes extraordinary.</p>
+                <p>You are not just my love—you are my inspiration, my sanctuary, my reason to be better every single day.</p>
+                <p>In this vast universe, finding you was destiny. Keeping you is my life's purpose. Loving you is my greatest joy.</p>
+                <div class="signature">Forever yours</div>
+            </div>
+        </div>
+        
+        <div class="interactive-container">
+            <div class="interactive-item">
+                <div class="interactive-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <div class="interactive-title">Our Memories</div>
+                <div class="interactive-desc">Every moment with you is precious</div>
+            </div>
+            <div class="interactive-item">
+                <div class="interactive-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="interactive-title">Your Beauty</div>
+                <div class="interactive-desc">Outshines every star in the sky</div>
+            </div>
+            <div class="interactive-item">
+                <div class="interactive-icon">
+                    <i class="fas fa-moon"></i>
+                </div>
+                <div class="interactive-title">My Promise</div>
+                <div class="interactive-desc">To love you for all eternity</div>
+            </div>
+        </div>
+        
+        <div class="chat-button-container">
+            <button class="chat-btn" id="openLoginModalBtn">
+                <i class="fas fa-message"></i> Go to Home
+            </button>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Login to Our World</h2>
+            <p style="color: #d47af2; font-size: 0.95rem; margin-bottom: 15px;">The first password you enter for Yob or Noon will become their permanent password.</p>
+            <div class="error-message" id="loginErrorMessage"></div>
+            <input type="password" id="passwordInput" placeholder="Enter password...">
+            <div class="user-selection">
+                <label>
+                    <input type="radio" name="username" value="Yob" checked> Yob
+                </label>
+                <label>
+                    <input type="radio" name="username" value="Noon"> Noon
+                </label>
+            </div>
+            <button class="login-button" id="loginBtn">Continue</button>
+        </div>
+    </div>
+
+    <script>
+        // Create floating hearts
+        function createHearts() {
+            const heartsContainer = document.getElementById('hearts');
+            const heartCount = 25;
+            
+            for (let i = 0; i < heartCount; i++) {
+                const heart = document.createElement('div');
+                heart.innerHTML = '❤';
+                heart.style.position = 'absolute';
+                heart.style.color = 'rgba(255, 117, 140, 0.7)';
+                heart.style.fontSize = Math.random() * 20 + 15 + 'px';
+                heart.style.top = Math.random() * 100 + 'vh';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.opacity = Math.random() * 0.7 + 0.3;
+                heart.style.zIndex = '1';
+                heart.style.pointerEvents = 'none';
+                
+                // Random animation duration and delay
+                const duration = Math.random() * 10 + 10;
+                const delay = Math.random() * 5;
+                heart.style.animation = `float ${duration}s infinite ease-in-out ${delay}s`;
+                
+                // Create style for float animation
+                if (!document.getElementById('float-style')) {
+                    const style = document.createElement('style');
+                    style.id = 'float-style';
+                    style.innerHTML = `
+                        @keyframes float {
+                            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+                            10% { opacity: 1; }
+                            90% { opacity: 0.8; }
+                            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+                
+                heartsContainer.appendChild(heart);
+            }
+        }
+        
+        // Create particles background
+        function createParticles() {
+            const canvas = document.getElementById('particles');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            // Particle array
+            const particles = [];
+            const particleCount = 80;
+            
+            // Particle class
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 3 + 1;
+                    this.speedX = Math.random() * 1 - 0.5;
+                    this.speedY = Math.random() * 1 - 0.5;
+                    this.color = Math.random() > 0.5 ? '#ff758c' : '#a18cd1';
+                    this.opacity = Math.random() * 0.7 + 0.3;
+                }
+                
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    
+                    if (this.x > canvas.width || this.x < 0) this.speedX = -this.speedX;
+                    if (this.y > canvas.height || this.y < 0) this.speedY = -this.speedY;
+                }
+                
+                draw() {
+                    ctx.fillStyle = this.color;
+                    ctx.globalAlpha = this.opacity;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.globalAlpha = 1;
+                }
+            }
+            
+            // Create particles
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+            
+            // Animation loop
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw connecting lines
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (distance < 100) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = `rgba(161, 140, 209, ${0.2 - distance/500})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                    
+                    particles[i].update();
+                    particles[i].draw();
+                }
+                
+                requestAnimationFrame(animate);
+            }
+            
+            animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        }
+        
+        // Login Modal Logic
+        const loginModal = document.getElementById('loginModal');
+        const openLoginModalBtn = document.getElementById('openLoginModalBtn');
+        const closeButton = document.querySelector('.close-button');
+        const loginBtn = document.getElementById('loginBtn');
+        const passwordInput = document.getElementById('passwordInput');
+        const loginErrorMessage = document.getElementById('loginErrorMessage');
+
+        openLoginModalBtn.addEventListener('click', () => {
+            loginModal.style.display = 'flex';
+            passwordInput.focus();
+        });
+
+        closeButton.addEventListener('click', () => {
+            loginModal.style.display = 'none';
+            loginErrorMessage.style.display = 'none';
+            passwordInput.value = '';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target == loginModal) {
+                loginModal.style.display = 'none';
+                loginErrorMessage.style.display = 'none';
+                passwordInput.value = '';
+            }
+        });
+
+        loginBtn.addEventListener('click', async () => {
+            const password = passwordInput.value;
+            const selectedUser = document.querySelector('input[name="username"]:checked').value;
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username: selectedUser, password: password }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    window.location.href = '/home.html'; // Redirect to home page
+                } else {
+                    loginErrorMessage.textContent = data.error || 'Login failed';
+                    loginErrorMessage.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                loginErrorMessage.textContent = 'An error occurred during login.';
+                loginErrorMessage.style.display = 'block';
+            }
+        });
+        
+        // Initialize everything
+        window.addEventListener('load', () => {
+            createHearts();
+            createParticles();
+        });
+    </script>
+</body>
+</html>

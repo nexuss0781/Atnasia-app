@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noon Gallery • Atnesiya</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            color: #e0d6eb;
+            min-height: 100vh;
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated background */
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .gallery-container {
+            width: 100%;
+            max-width: 1200px;
+            background: rgba(25, 20, 45, 0.8);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            min-height: 85vh;
+            border: 1px solid rgba(161, 140, 209, 0.3);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header */
+        .gallery-header {
+            padding: 25px 30px;
+            background: rgba(40, 30, 70, 0.7);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(161, 140, 209, 0.3);
+        }
+        
+        .gallery-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: #f9e0ee;
+            font-weight: 700;
+        }
+        
+        .home-link {
+            background: rgba(106, 76, 190, 0.3);
+            color: #f8d5e4;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .home-link:hover {
+            background: rgba(106, 76, 190, 0.5);
+            transform: rotate(90deg);
+        }
+        
+        /* Upload area */
+        .upload-area {
+            padding: 30px;
+            text-align: center;
+            border-bottom: 1px solid rgba(161, 140, 209, 0.3);
+        }
+        
+        .upload-box {
+            border: 2px dashed rgba(161, 140, 209, 0.5);
+            border-radius: 15px;
+            padding: 40px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(30, 25, 55, 0.4);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .upload-box:hover {
+            border-color: #ff758c;
+            background: rgba(40, 35, 65, 0.6);
+            transform: translateY(-5px);
+        }
+        
+        .upload-icon {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            color: #a18cd1;
+        }
+        
+        .upload-text {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #f9e0ee;
+        }
+        
+        .upload-note {
+            font-size: 0.9rem;
+            color: #c8a2e0;
+            margin-top: 10px;
+        }
+        
+        #fileInput {
+            display: none;
+        }
+        
+        /* Gallery grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            padding: 30px;
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        /* Media item */
+        .media-item {
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 1/1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            background: rgba(30, 25, 55, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .media-item:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(161, 140, 209, 0.4);
+            border: 1px solid #ff758c;
+        }
+        
+        .media-preview {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .media-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .media-icon-container {
+            text-align: center;
+            z-index: 2;
+        }
+        
+        .media-icon {
+            font-size: 3.5rem;
+            color: #a18cd1;
+            margin-bottom: 10px;
+        }
+        
+        .media-filename {
+            color: #f9e0ee;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 0 10px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .media-type {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(106, 76, 190, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        /* Lightbox */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .lightbox-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .lightbox-content img,
+        .lightbox-content video {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+        
+        .lightbox-content video {
+            background: #000;
+        }
+        
+        .lightbox-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            background: rgba(106, 76, 190, 0.8);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .lightbox-info {
+            color: white;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 1.1rem;
+        }
+        
+        /* Empty state */
+        .empty-gallery {
+            text-align: center;
+            color: #d8b4e2;
+            font-style: italic;
+            padding: 40px;
+            font-size: 1.2rem;
+            grid-column: 1 / -1;
+        }
+        
+        /* Scrollbar styling */
+        .gallery-grid::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .gallery-grid::-webkit-scrollbar-track {
+            background: rgba(106, 76, 190, 0.1);
+            border-radius: 4px;
+        }
+        
+        .gallery-grid::-webkit-scrollbar-thumb {
+            background: linear-gradient(#ff758c, #a18cd1);
+            border-radius: 4px;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .gallery-container {
+                min-height: 90vh;
+                border-radius: 15px;
+            }
+            
+            .gallery-title {
+                font-size: 2rem;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .gallery-header {
+                padding: 20px;
+            }
+            
+            .gallery-title {
+                font-size: 1.8rem;
+            }
+            
+            .upload-box {
+                padding: 30px 15px;
+            }
+            
+            .upload-icon {
+                font-size: 2.5rem;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particles"></canvas>
+    <div class="hearts-container" id="hearts-container"></div>
+    
+    <div class="gallery-container">
+        <div class="gallery-header">
+            <h1 class="gallery-title">Noon Memories</h1>
+            <a href="home.html" class="home-link" title="Go to Home">
+                <i class="fas fa-home"></i>
+            </a>
+        </div>
+        
+        <div class="upload-area">
+            <div class="upload-box" id="uploadBox">
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <div class="upload-text">Click to upload photos, videos, or files</div>
+                <div class="upload-note">Supports JPG, PNG, MP4, PDF, and more</div>
+                <input type="file" id="fileInput" multiple accept="image/*,video/*,.pdf,.doc,.docx,.txt">
+            </div>
+        </div>
+        
+        <div class="gallery-grid" id="galleryGrid">
+            <div class="empty-gallery" id="emptyGallery">
+                <p>✨ Your memories will appear here ✨</p>
+                <p>Upload photos, videos, or files to start building your gallery</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-content">
+            <div class="lightbox-close" id="lightboxClose">
+                <i class="fas fa-times"></i>
+            </div>
+            <div id="lightboxMedia"></div>
+            <div class="lightbox-info" id="lightboxInfo"></div>
+        </div>
+    </div>
+
+    <script>
+        // Create animated background
+        function createAnimatedBackground() {
+            // Create floating hearts
+            const heartsContainer = document.getElementById('hearts-container');
+            const heartCount = 15;
+            
+            for (let i = 0; i < heartCount; i++) {
+                const heart = document.createElement('div');
+                heart.innerHTML = '❤';
+                heart.style.position = 'absolute';
+                heart.style.color = 'rgba(255, 117, 140, 0.6)';
+                heart.style.fontSize = Math.random() * 15 + 10 + 'px';
+                heart.style.top = Math.random() * 100 + 'vh';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.opacity = Math.random() * 0.7 + 0.3;
+                heart.style.zIndex = '1';
+                heart.style.pointerEvents = 'none';
+                heart.style.animation = `float ${Math.random() * 10 + 10}s infinite ease-in-out ${Math.random() * 5}s`;
+                
+                heartsContainer.appendChild(heart);
+            }
+            
+            // Create particles background
+            const canvas = document.getElementById('particles');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            // Particle array
+            const particles = [];
+            const particleCount = 60;
+            
+            // Particle class
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 3 + 1;
+                    this.speedX = Math.random() * 1 - 0.5;
+                    this.speedY = Math.random() * 1 - 0.5;
+                    this.color = Math.random() > 0.5 ? '#ff758c' : '#a18cd1';
+                    this.opacity = Math.random() * 0.7 + 0.3;
+                }
+                
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    
+                    if (this.x > canvas.width || this.x < 0) this.speedX = -this.speedX;
+                    if (this.y > canvas.height || this.y < 0) this.speedY = -this.speedY;
+                }
+                
+                draw() {
+                    ctx.fillStyle = this.color;
+                    ctx.globalAlpha = this.opacity;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.globalAlpha = 1;
+                }
+            }
+            
+            // Create particles
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+            
+            // Animation loop
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw connecting lines
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (distance < 100) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = `rgba(161, 140, 209, ${0.2 - distance/500})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                    
+                    particles[i].update();
+                    particles[i].draw();
+                }
+                
+                requestAnimationFrame(animate);
+            }
+            
+            animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        }
+        
+        // Media gallery functionality
+        class MediaGallery {
+            constructor() {
+                this.mediaItems = JSON.parse(localStorage.getItem('noonGallery')) || [];
+                this.galleryGrid = document.getElementById('galleryGrid');
+                this.emptyGallery = document.getElementById('emptyGallery');
+                this.fileInput = document.getElementById('fileInput');
+                this.uploadBox = document.getElementById('uploadBox');
+                this.lightbox = document.getElementById('lightbox');
+                this.lightboxMedia = document.getElementById('lightboxMedia');
+                this.lightboxInfo = document.getElementById('lightboxInfo');
+                this.lightboxClose = document.getElementById('lightboxClose');
+            }
+            
+            init() {
+                this.renderGallery();
+                this.bindEvents();
+            }
+            
+            bindEvents() {
+                this.uploadBox.addEventListener('click', () => {
+                    this.fileInput.click();
+                });
+                
+                this.fileInput.addEventListener('change', (e) => {
+                    this.handleFileSelect(e);
+                });
+                
+                this.lightboxClose.addEventListener('click', () => {
+                    this.closeLightbox();
+                });
+                
+                this.lightbox.addEventListener('click', (e) => {
+                    if (e.target === this.lightbox) {
+                        this.closeLightbox();
+                    }
+                });
+                
+                // Close lightbox with Escape key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        this.closeLightbox();
+                    }
+                });
+            }
+            
+            handleFileSelect(e) {
+                const files = Array.from(e.target.files);
+                if (files.length === 0) return;
+                
+                files.forEach(file => {
+                    // Create a preview for images/videos
+                    let previewUrl = null;
+                    let isImage = false;
+                    let isVideo = false;
+                    
+                    if (file.type.startsWith('image/')) {
+                        previewUrl = URL.createObjectURL(file);
+                        isImage = true;
+                    } else if (file.type.startsWith('video/')) {
+                        // Create a thumbnail from the video
+                        const video = document.createElement('video');
+                        video.preload = 'metadata';
+                        video.muted = true;
+                        video.onloadedmetadata = () => {
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+                            canvas.width = 100;
+                            canvas.height = 100;
+                            video.currentTime = 1; // Seek to 1 second
+                        };
+                        previewUrl = URL.createObjectURL(file);
+                        isVideo = true;
+                    }
+                    
+                    const mediaItem = {
+                        id: Date.now() + Math.random(),
+                        name: file.name,
+                        type: file.type,
+                        url: URL.createObjectURL(file),
+                        previewUrl: previewUrl,
+                        isImage: isImage,
+                        isVideo: isVideo,
+                        date: new Date().toISOString()
+                    };
+                    
+                    this.mediaItems.unshift(mediaItem);
+                    this.saveToStorage();
+                });
+                
+                this.renderGallery();
+                // Reset input
+                this.fileInput.value = '';
+            }
+            
+            getMediaType(type) {
+                if (type.startsWith('image/')) return 'image';
+                if (type.startsWith('video/')) return 'video';
+                return 'file';
+            }
+            
+            getMediaIcon(type) {
+                if (type.startsWith('image/')) return 'far fa-image';
+                if (type.startsWith('video/')) return 'fas fa-video';
+                if (type.includes('pdf')) return 'fas fa-file-pdf';
+                if (type.includes('doc')) return 'fas fa-file-word';
+                return 'fas fa-file';
+            }
+            
+            renderGallery() {
+                if (this.mediaItems.length === 0) {
+                    this.emptyGallery.style.display = 'block';
+                    this.galleryGrid.innerHTML = '';
+                    this.galleryGrid.appendChild(this.emptyGallery);
+                    return;
+                }
+                
+                this.emptyGallery.style.display = 'none';
+                this.galleryGrid.innerHTML = '';
+                
+                this.mediaItems.forEach(item => {
+                    const mediaType = this.getMediaType(item.type);
+                    const mediaItem = document.createElement('div');
+                    mediaItem.className = 'media-item';
+                    mediaItem.dataset.id = item.id;
+                    
+                    let mediaContent = '';
+                    
+                    if (item.isImage) {
+                        // Display actual image
+                        mediaContent = `
+                            <div class="media-preview">
+                                <img src="${item.previewUrl}" alt="${item.name}">
+                            </div>
+                        `;
+                    } else if (item.isVideo) {
+                        // Display video icon with play symbol
+                        mediaContent = `
+                            <div class="media-preview">
+                                <div class="media-icon-container">
+                                    <div class="media-icon">
+                                        <i class="fas fa-play-circle"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        // Display file icon
+                        mediaContent = `
+                            <div class="media-preview">
+                                <div class="media-icon-container">
+                                    <div class="media-icon">
+                                        <i class="${this.getMediaIcon(item.type)}"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
+                    mediaItem.innerHTML = `
+                        ${mediaContent}
+                        <div class="media-type">${mediaType.charAt(0).toUpperCase() + mediaType.slice(1)}</div>
+                        <div class="media-filename">${item.name}</div>
+                    `;
+                    
+                    mediaItem.addEventListener('click', () => {
+                        this.openLightbox(item);
+                    });
+                    
+                    this.galleryGrid.appendChild(mediaItem);
+                });
+            }
+            
+            openLightbox(item) {
+                const mediaType = this.getMediaType(item.type);
+                this.lightboxMedia.innerHTML = '';
+                
+                if (item.isImage) {
+                    const img = document.createElement('img');
+                    img.src = item.url;
+                    img.alt = item.name;
+                    this.lightboxMedia.appendChild(img);
+                } else if (item.isVideo) {
+                    const video = document.createElement('video');
+                    video.controls = true;
+                    video.src = item.url;
+                    video.style.width = '100%';
+                    video.style.height = 'auto';
+                    this.lightboxMedia.appendChild(video);
+                } else {
+                    // For files, show a message with download option
+                    this.lightboxMedia.innerHTML = `
+                        <div style="color: white; text-align: center; padding: 20px;">
+                            <i class="${this.getMediaIcon(item.type)}" style="font-size: 4rem; margin-bottom: 20px; color: #a18cd1;"></i>
+                            <div>File: ${item.name}</div>
+                            <div style="margin-top: 15px;">
+                                <a href="${item.url}" download="${item.name}" style="display: inline-block; background: linear-gradient(45deg, #ff758c, #a18cd1); color: white; padding: 10px 20px; border-radius: 25px; text-decoration: none; font-weight: 600;">
+                                    <i class="fas fa-download"></i> Download File
+                                </a>
+                            </div>
+                            <div style="margin-top: 10px; font-size: 0.9rem; color: #c8a2e0;">
+                                This file type cannot be previewed in the browser.
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                this.lightboxInfo.textContent = item.name;
+                this.lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+            
+            closeLightbox() {
+                this.lightbox.classList.remove('active');
+                document.body.style.overflow = '';
+                
+                // Pause any playing video
+                const video = this.lightboxMedia.querySelector('video');
+                if (video) {
+                    video.pause();
+                }
+            }
+            
+            saveToStorage() {
+                localStorage.setItem('noonGallery', JSON.stringify(this.mediaItems));
+            }
+        }
+        
+        // Initialize everything
+        window.addEventListener('load', () => {
+            createAnimatedBackground();
+            const gallery = new MediaGallery();
+            gallery.init();
+        });
+    </script>
+</body>
+</html>
+

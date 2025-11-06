@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Love Journey</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-family: 'Montserrat', sans-serif;
+            position: relative;
+        }
+        
+        /* Animated background */
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* Header */
+        header {
+            text-align: center;
+            padding: 60px 0 40px;
+            position: relative; /* Added for logout button positioning */
+        }
+        
+        .main-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #ff758c, #ff7eb3, #d47af2, #a18cd1);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradientShift 8s ease infinite;
+            text-shadow: 0 10px 30px rgba(161, 140, 209, 0.4);
+            margin-bottom: 20px;
+        }
+        
+        .subtitle {
+            font-size: 1.8rem;
+            color: #f8d5e4;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .welcome-message {
+            font-size: 1.5rem;
+            color: #d47af2;
+            margin-top: 15px;
+            font-family: 'Dancing Script', cursive;
+        }
+        
+        /* Logout Button */
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #a18cd1, #ff758c);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+        }
+        
+        /* Cards grid */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+            padding: 20px;
+        }
+        
+        .card {
+            background: rgba(25, 20, 45, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            position: relative;
+            height: 320px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 30px;
+            border: 1px solid rgba(161, 140, 209, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, 
+                rgba(255, 117, 140, 0.1) 0%, 
+                rgba(161, 140, 209, 0.1) 100%);
+            z-index: -1;
+        }
+        
+        .card:hover {
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 0 20px 40px rgba(161, 140, 209, 0.4);
+            border-color: rgba(255, 117, 140, 0.6);
+            background: rgba(35, 30, 65, 0.8);
+        }
+        
+        .card-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #ff758c, #a18cd1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .card-title {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #f9e0ee;
+            font-weight: 600;
+        }
+        
+        .card-desc {
+            font-size: 1.1rem;
+            color: #d8b4e2;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        
+        .card-btn {
+            background: linear-gradient(45deg, #ff758c, #a18cd1);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .card-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 117, 140, 0.5);
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #d8b4e2;
+            font-size: 1rem;
+            margin-top: 20px;
+        }
+        
+        /* Animations */
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 3.5rem;
+            }
+            .subtitle {
+                font-size: 1.4rem;
+            }
+            .cards-container {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+                margin: 40px auto;
+            }
+            .card {
+                height: auto;
+                min-height: 300px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-title {
+                font-size: 2.8rem;
+            }
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            .card-title {
+                font-size: 1.5rem;
+            }
+            .card-icon {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particles"></canvas>
+    <div class="hearts-container" id="hearts-container"></div>
+    
+    <div class="container">
+        <header>
+            <button class="logout-btn" id="logoutBtn">Logout</button>
+            <h1 class="main-title">Atnesiya</h1>
+            <div class="subtitle">Our Love Story Begins Here</div>
+            {% if username %}
+            <p class="welcome-message">Welcome, {{ username }}!</p>
+            {% endif %}
+        </header>
+        
+        <div class="cards-container">
+            <!-- About Us Card -->
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <h2 class="card-title">About You & Me</h2>
+                <p class="card-desc">Discover our journey together, our shared dreams, and the moments that brought us closer.</p>
+                <a href="about_us.html" class="card-btn">Explore Our Story</a>
+            </div>
+            
+            <!-- My Letter Card -->
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <h2 class="card-title">My Letter To You</h2>
+                <p class="card-desc">Read the words from my heart that I've poured out just for you, my love.</p>
+                <a href="my_letter.html" class="card-btn">Read My Words</a>
+            </div>
+            
+            <!-- Chat Card -->
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h2 class="card-title">Our Chat</h2>
+                <p class="card-desc">Where our conversations flow like a river of love and understanding.</p>
+                <a href="chat.html" class="card-btn">Start Chatting</a>
+            </div>
+            
+            <!-- Noon Card -->
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-sun"></i>
+                </div>
+                <h2 class="card-title">Noon</h2>
+                <p class="card-desc">A special place dedicated to our midday moments and sunny memories together.</p>
+                <a href="noon.html" class="card-btn">Discover Noon</a>
+            </div>
+            
+            <!-- Universe Card -->
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-galaxy"></i>
+                </div>
+                <h2 class="card-title">Our Universe</h2>
+                <p class="card-desc">Explore the cosmic expanse of our love, where every star tells a story.</p>
+                <a href="universe.html" class="card-btn">Journey to the Universe</a>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Made with love for Atnesiya • Every moment with you is precious</p>
+        </footer>
+    </div>
+
+    <script>
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (response.ok) {
+                    window.location.href = '/'; // Redirect to index page after logout
+                } else {
+                    console.error('Logout failed');
+                    alert('Logout failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+                alert('An error occurred during logout.');
+            }
+        });
+
+        // Create floating hearts
+        function createHearts() {
+            const heartsContainer = document.getElementById('hearts-container');
+            const heartCount = 20;
+            
+            for (let i = 0; i < heartCount; i++) {
+                const heart = document.createElement('div');
+                heart.innerHTML = '❤';
+                heart.style.position = 'absolute';
+                heart.style.color = 'rgba(255, 117, 140, 0.6)';
+                heart.style.fontSize = Math.random() * 20 + 15 + 'px';
+                heart.style.top = Math.random() * 100 + 'vh';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.opacity = Math.random() * 0.7 + 0.3;
+                heart.style.zIndex = '1';
+                heart.style.pointerEvents = 'none';
+                heart.style.animation = `float ${Math.random() * 10 + 10}s infinite ease-in-out ${Math.random() * 5}s`;
+                
+                heartsContainer.appendChild(heart);
+            }
+        }
+        
+        // Create particles background
+        function createParticles() {
+            const canvas = document.getElementById('particles');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            // Particle array
+            const particles = [];
+            const particleCount = 70;
+            
+            // Particle class
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 3 + 1;
+                    this.speedX = Math.random() * 1 - 0.5;
+                    this.speedY = Math.random() * 1 - 0.5;
+                    this.color = Math.random() > 0.5 ? '#ff758c' : '#a18cd1';
+                    this.opacity = Math.random() * 0.7 + 0.3;
+                }
+                
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    
+                    if (this.x > canvas.width || this.x < 0) this.speedX = -this.speedX;
+                    if (this.y > canvas.height || this.y < 0) this.speedY = -this.speedY;
+                }
+                
+                draw() {
+                    ctx.fillStyle = this.color;
+                    ctx.globalAlpha = this.opacity;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.globalAlpha = 1;
+                }
+            }
+            
+            // Create particles
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+            
+            // Animation loop
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw connecting lines
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (distance < 120) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = `rgba(161, 140, 209, ${0.2 - distance/600})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                    
+                    particles[i].update();
+                    particles[i].draw();
+                }
+                
+                requestAnimationFrame(animate);
+            }
+            
+            animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        }
+        
+        // Initialize everything
+        window.addEventListener('load', () => {
+            createHearts();
+            createParticles();
+        });
+    </script>
+</body>
+</html>

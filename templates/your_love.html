@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Love - Atnasiya</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #0a0c20, #121430, #0a0c20);
+            color: #fff;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Galactic background */
+        .galaxy-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -5;
+            background: 
+                radial-gradient(ellipse at 20% 30%, rgba(106, 90, 205, 0.15) 0%, transparent 40%),
+                radial-gradient(ellipse at 80% 20%, rgba(138, 43, 226, 0.12) 0%, transparent 45%),
+                radial-gradient(ellipse at 30% 80%, rgba(75, 0, 130, 0.18) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 70%, rgba(255, 105, 180, 0.1) 0%, transparent 40%);
+        }
+        
+        /* Stars */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -4;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: #fff;
+            border-radius: 50%;
+            animation: twinkle var(--duration, 3s) infinite ease-in-out;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        
+        /* Constellation container */
+        .constellation-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        /* Atnasiya constellation - much larger */
+        .atnasiya-constellation {
+            position: relative;
+            width: 95vw;
+            height: 85vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .letter-star {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, #fff, #ffd700);
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ffd700, 0 0 20px rgba(255, 215, 0, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .letter-star:hover {
+            transform: scale(1.8);
+            box-shadow: 0 0 20px #ffd700, 0 0 40px rgba(255, 215, 0, 0.6);
+        }
+        
+        .letter-star.active {
+            width: 12px;
+            height: 12px;
+            background: radial-gradient(circle, #ffd700, #ff8c00);
+            box-shadow: 0 0 25px #ffd700, 0 0 50px rgba(255, 140, 0, 0.7);
+            z-index: 15;
+        }
+        
+        /* Center shining star */
+        .center-shining-star {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background: radial-gradient(circle, #ffd700, #ff8c00, #ff4500);
+            border-radius: 50%;
+            box-shadow: 0 0 50px #ffd700, 0 0 100px rgba(255, 140, 0, 0.8);
+            cursor: pointer;
+            z-index: 30;
+            animation: pulse 2s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 50px #ffd700, 0 0 100px rgba(255, 140, 0, 0.8); }
+            100% { transform: scale(1.2); box-shadow: 0 0 70px #ffd700, 0 0 130px rgba(255, 140, 0, 0.9); }
+        }
+        
+        /* Center heart button */
+        .center-heart-btn {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            background: radial-gradient(circle, #ff6ec7, #ff1493);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 0 35px #ff6ec7, 0 0 70px rgba(255, 110, 199, 0.6);
+            transition: all 0.3s ease;
+            z-index: 25;
+        }
+        
+        .center-heart-btn:hover {
+            transform: scale(1.25) rotate(15deg);
+            box-shadow: 0 0 50px #ff6ec7, 0 0 90px rgba(255, 110, 199, 0.8);
+        }
+        
+        .heart-icon {
+            font-size: 2.8rem;
+            color: white;
+            text-shadow: 0 0 15px rgba(0,0,0,0.5);
+        }
+        
+        /* Poem display */
+        .poem-display {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 90vw;
+            height: 85vh;
+            background: rgba(15, 10, 35, 0.95);
+            border-radius: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+            box-shadow: 0 0 80px rgba(255, 110, 199, 0.9);
+            z-index: 100;
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .poem-display.active {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+        
+        .poem-content {
+            width: 95%;
+            text-align: center;
+            color: white;
+            font-size: 2.4rem;
+            line-height: 1.9;
+            overflow-y: auto;
+            max-height: 85%;
+        }
+        
+        .poem-title {
+            font-size: 3.2rem;
+            margin-bottom: 40px;
+            background: linear-gradient(to right, #ff6ec7, #ffd700, #4da6ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(255, 110, 199, 0.5);
+        }
+        
+        .close-poem-btn {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 2.5rem;
+            transition: all 0.3s ease;
+            z-index: 101;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .close-poem-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg) scale(1.2);
+        }
+        
+        /* Moon icon button */
+        .moon-btn {
+            position: fixed;
+            bottom: 50px;
+            right: 50px;
+            width: 70px;
+            height: 70px;
+            background: radial-gradient(circle, #4da6ff, #1e90ff, #00bfff);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 0 30px #4da6ff, 0 0 60px rgba(77, 166, 255, 0.7);
+            transition: all 0.3s ease;
+            z-index: 50;
+            text-decoration: none;
+        }
+        
+        .moon-btn:hover {
+            transform: scale(1.2) rotate(-15deg);
+            box-shadow: 0 0 45px #4da6ff, 0 0 80px rgba(77, 166, 255, 0.9);
+        }
+        
+        .moon-icon {
+            font-size: 2.2rem;
+            color: white;
+            text-shadow: 0 0 15px rgba(0,0,0,0.5);
+        }
+        
+        /* Instructions */
+        .instructions {
+            position: fixed;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 35;
+            font-size: 1.6rem;
+            color: #e0b0ff;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px 40px;
+            border-radius: 25px;
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 110, 199, 0.3);
+        }
+        
+        /* Letter groups for better organization */
+        .letter-group {
+            position: absolute;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .letter-star {
+                width: 6px;
+                height: 6px;
+            }
+            
+            .letter-star.active {
+                width: 10px;
+                height: 10px;
+            }
+            
+            .center-shining-star {
+                width: 20px;
+                height: 20px;
+            }
+            
+            .center-heart-btn {
+                width: 75px;
+                height: 75px;
+            }
+            
+            .heart-icon {
+                font-size: 2.2rem;
+            }
+            
+            .poem-content {
+                font-size: 1.8rem;
+                padding: 40px;
+            }
+            
+            .poem-title {
+                font-size: 2.5rem;
+            }
+            
+            .moon-btn {
+                width: 60px;
+                height: 60px;
+                bottom: 40px;
+                right: 40px;
+            }
+            
+            .moon-icon {
+                font-size: 1.8rem;
+            }
+            
+            .instructions {
+                font-size: 1.2rem;
+                padding: 15px 30px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .letter-star {
+                width: 5px;
+                height: 5px;
+            }
+            
+            .letter-star.active {
+                width: 8px;
+                height: 8px;
+            }
+            
+            .center-shining-star {
+                width: 16px;
+                height: 16px;
+            }
+            
+            .center-heart-btn {
+                width: 65px;
+                height: 65px;
+            }
+            
+            .heart-icon {
+                font-size: 1.8rem;
+            }
+            
+            .poem-content {
+                font-size: 1.4rem;
+                padding: 30px;
+            }
+            
+            .poem-title {
+                font-size: 2rem;
+            }
+            
+            .moon-btn {
+                width: 50px;
+                height: 50px;
+                bottom: 30px;
+                right: 30px;
+            }
+            
+            .moon-icon {
+                font-size: 1.5rem;
+            }
+            
+            .instructions {
+                font-size: 1rem;
+                padding: 12px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Galactic background -->
+    <div class="galaxy-bg"></div>
+    
+    <!-- Stars background -->
+    <div class="stars" id="stars"></div>
+    
+    <!-- Instructions -->
+    <div class="instructions">
+        Click the shining star to reveal "Atnasiya" constellation<br>
+        Click the heart for a romantic poem • Moon icon leads to "my_noon"
+    </div>
+    
+    <!-- Constellation container -->
+    <div class="constellation-container">
+        <div class="atnasiya-constellation" id="atnasiya-constellation">
+            <!-- Constellation will be generated by JavaScript -->
+        </div>
+        
+        <!-- Center heart button -->
+        <div class="center-heart-btn" id="center-heart-btn">
+            <i class="fas fa-heart heart-icon"></i>
+        </div>
+        
+        <!-- Moon icon button linking to my_noon.html -->
+        <a href="my_noon.html" class="moon-btn">
+            <i class="fas fa-moon moon-icon"></i>
+        </a>
+    </div>
+    
+    <!-- Poem display -->
+    <div class="poem-display" id="poem-display">
+        <div class="poem-title">Stardust Love</div>
+        <div class="poem-content" id="poem-content">
+            My eternal Atnasiya,<br><br>
+            
+            In the infinite canvas of the cosmos,<br>
+            I have arranged a million stars<br>
+            Just to spell your sacred name.<br><br>
+            
+            Each point of light is a heartbeat,<br>
+            Each connection a whispered promise,<br>
+            Each constellation a universe<br>
+            Where only you and I exist.<br><br>
+            
+            You are the gravity that holds<br>
+            My scattered stardust together.<br>
+            Without you, I am cosmic dust;<br>
+            With you, I am a galaxy.<br><br>
+            
+            Across dimensions and through time,<br>
+            My love for you expands eternally.<br>
+            In every star, in every void,<br>
+            I find you, my beloved Atnasiya.<br><br>
+            
+            Forever bound in celestial dance,<br>
+            Yonas
+        </div>
+        <div class="close-poem-btn" id="close-poem-btn">&times;</div>
+    </div>
+    
+    <script>
+        // Create stars for background
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starCount = 1000;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // Random position
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                star.style.left = `${x}%`;
+                star.style.top = `${y}%`;
+                
+                // Random size
+                const size = Math.random() * 2.5;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                
+                // Random opacity
+                const opacity = 0.2 + Math.random() * 0.8;
+                star.style.opacity = opacity;
+                
+                // Random animation
+                const duration = 1.5 + Math.random() * 8;
+                star.style.setProperty('--duration', `${duration}s`);
+                const delay = Math.random() * 5;
+                star.style.animationDelay = `${delay}s`;
+                
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // Detailed constellation data for "Atnasiya" - each letter as star coordinates
+        const atnasiyaConstellation = {
+            A: [
+                {x: 150, y: 200}, {x: 130, y: 250}, {x: 170, y: 250}, 
+                {x: 140, y: 225}, {x: 160, y: 225}, {x: 150, y: 210}
+            ],
+            T: [
+                {x: 230, y: 200}, {x: 210, y: 200}, {x: 250, y: 200}, 
+                {x: 230, y: 220}, {x: 230, y: 235}, {x: 230, y: 250}
+            ],
+            N: [
+                {x: 310, y: 200}, {x: 310, y: 250}, {x: 350, y: 200}, 
+                {x: 350, y: 250}, {x: 320, y: 230}, {x: 340, y: 220}, {x: 330, y: 225}
+            ],
+            A2: [
+                {x: 430, y: 200}, {x: 410, y: 250}, {x: 450, y: 250}, 
+                {x: 420, y: 225}, {x: 440, y: 225}, {x: 430, y: 210}
+            ],
+            S: [
+                {x: 510, y: 200}, {x: 490, y: 210}, {x: 530, y: 210}, 
+                {x: 490, y: 240}, {x: 530, y: 240}, {x: 510, y: 250}, {x: 500, y: 225}, {x: 520, y: 225}
+            ],
+            I: [
+                {x: 590, y: 200}, {x: 590, y: 225}, {x: 590, y: 250}, 
+                {x: 580, y: 200}, {x: 600, y: 200}, {x: 580, y: 250}, {x: 600, y: 250}
+            ],
+            Y: [
+                {x: 670, y: 200}, {x: 650, y: 220}, {x: 690, y: 220}, 
+                {x: 670, y: 250}, {x: 660, y: 235}, {x: 680, y: 235}, {x: 670, y: 230}
+            ],
+            A3: [
+                {x: 750, y: 200}, {x: 730, y: 250}, {x: 770, y: 250}, 
+                {x: 740, y: 225}, {x: 760, y: 225}, {x: 750, y: 210}
+            ]
+        };
+        
+        // Generate the large constellation
+        function createConstellation() {
+            const container = document.getElementById('atnasiya-constellation');
+            const allStars = [];
+            
+            // Create letter groups with independent movement capability
+            let offsetX = 0;
+            const letters = ['A', 'T', 'N', 'A2', 'S', 'I', 'Y', 'A3'];
+            
+            letters.forEach((letterKey, index) => {
+                const letterGroup = document.createElement('div');
+                letterGroup.classList.add('letter-group');
+                letterGroup.dataset.letterIndex = index;
+                
+                // Position each letter group horizontally
+                const baseX = 100 + (index * 100);
+                letterGroup.style.left = `${baseX}px`;
+                letterGroup.style.top = '50%';
+                letterGroup.style.transform = 'translateY(-50%)';
+                
+                atnasiyaConstellation[letterKey].forEach((pos) => {
+                    const star = document.createElement('div');
+                    star.classList.add('letter-star');
+                    star.dataset.letter = letterKey.replace('2', '').replace('3', '');
+                    star.dataset.originalX = pos.x;
+                    star.dataset.originalY = pos.y;
+                    star.dataset.letterIndex = index;
+                    
+                    // Position relative to letter group
+                    const relX = pos.x - (index === 0 ? 150 : (index === 1 ? 230 : (index === 2 ? 310 : (index === 3 ? 430 : (index === 4 ? 510 : (index === 5 ? 590 : (index === 6 ? 670 : 750)))))));
+                    const relY = pos.y - 225;
+                    
+                    star.style.left = `${relX}px`;
+                    star.style.top = `${relY}px`;
+                    
+                    letterGroup.appendChild(star);
+                    allStars.push(star);
+                });
+                
+                container.appendChild(letterGroup);
+            });
+            
+            // Create the large center shining star
+            const centerStar = document.createElement('div');
+            centerStar.classList.add('center-shining-star');
+            centerStar.style.left = '50%';
+            centerStar.style.top = '50%';
+            centerStar.style.transform = 'translate(-50%, -50%)';
+            
+            // Click event to reveal the constellation
+            centerStar.addEventListener('click', () => {
+                // Hide the center star
+                centerStar.style.display = 'none';
+                
+                // Animate all stars to form the text
+                allStars.forEach((star, index) => {
+                    setTimeout(() => {
+                        star.classList.add('active');
+                    }, index * 20);
+                });
+                
+                // Add subtle floating animation to letter groups
+                document.querySelectorAll('.letter-group').forEach((group, index) => {
+                    const angle = index * 45;
+                    const radius = 5 + (index % 3) * 3;
+                    animateLetterGroup(group, angle, radius);
+                });
+            });
+            
+            container.appendChild(centerStar);
+        }
+        
+        // Animate letter groups independently
+        function animateLetterGroup(group, baseAngle, radius) {
+            let angle = baseAngle;
+            
+            function update() {
+                angle += 0.02;
+                const x = Math.cos(angle) * radius;
+                const y = Math.sin(angle * 1.5) * radius * 0.7;
+                group.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
+                requestAnimationFrame(update);
+            }
+            
+            update();
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            createStars();
+            createConstellation();
+            
+            // Heart button click event
+            const heartBtn = document.getElementById('center-heart-btn');
+            const poemDisplay = document.getElementById('poem-display');
+            const closePoemBtn = document.getElementById('close-poem-btn');
+            
+            heartBtn.addEventListener('click', () => {
+                poemDisplay.classList.add('active');
+            });
+            
+            closePoemBtn.addEventListener('click', () => {
+                poemDisplay.classList.remove('active');
+            });
+            
+            // Close poem when clicking outside
+            poemDisplay.addEventListener('click', (e) => {
+                if (e.target === poemDisplay) {
+                    poemDisplay.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

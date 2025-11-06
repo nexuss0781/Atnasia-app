@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Atnasiya & Yonas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #0a0c20, #121430, #0a0c20);
+            color: #fff;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Galactic background */
+        .galaxy-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -5;
+            background: 
+                radial-gradient(ellipse at 20% 30%, rgba(106, 90, 205, 0.15) 0%, transparent 40%),
+                radial-gradient(ellipse at 80% 20%, rgba(138, 43, 226, 0.12) 0%, transparent 45%),
+                radial-gradient(ellipse at 30% 80%, rgba(75, 0, 130, 0.18) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 70%, rgba(255, 105, 180, 0.1) 0%, transparent 40%);
+        }
+        
+        /* Nebula clouds */
+        .nebula {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            opacity: 0.6;
+            z-index: -4;
+        }
+        
+        /* Black holes */
+        .black-hole {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, #000 0%, #0a0c20 70%, transparent 100%);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+            z-index: -4;
+        }
+        
+        /* Stars */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -3;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: #fff;
+            border-radius: 50%;
+            animation: twinkle var(--duration, 3s) infinite ease-in-out;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        
+        /* Heart elements */
+        .floating-heart {
+            position: absolute;
+            font-size: 20px;
+            color: #ff6ec7;
+            z-index: -2;
+            text-shadow: 0 0 10px rgba(255, 110, 199, 0.7);
+            animation: floatHeart 15s infinite linear;
+        }
+        
+        @keyframes floatHeart {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(100px, 50px) rotate(90deg); }
+            50% { transform: translate(50px, 100px) rotate(180deg); }
+            75% { transform: translate(-50px, 50px) rotate(270deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+        }
+        
+        /* Roses - using heart icon as alternative */
+        .floating-rose {
+            position: absolute;
+            font-size: 22px;
+            color: #ff6ec7;
+            z-index: -2;
+            text-shadow: 0 0 10px rgba(255, 110, 199, 0.7);
+            animation: floatRose 18s infinite linear;
+        }
+        
+        @keyframes floatRose {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(80px, -60px) rotate(120deg); }
+            66% { transform: translate(-70px, 90px) rotate(240deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+        }
+        
+        /* Heart comets */
+        .heart-comet {
+            position: absolute;
+            font-size: 24px;
+            color: #ff6ec7;
+            z-index: -1;
+            text-shadow: 0 0 15px rgba(255, 110, 199, 0.8);
+            animation: cometTrail 10s infinite linear;
+        }
+        
+        .heart-comet::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 120px;
+            height: 6px;
+            background: linear-gradient(90deg, transparent, rgba(255, 110, 199, 0.7), transparent);
+            transform: translate(-50%, -50%) rotate(var(--angle));
+            border-radius: 50%;
+            z-index: -1;
+        }
+        
+        @keyframes cometTrail {
+            0% { 
+                transform: translate(0, 0) rotate(0deg); 
+                opacity: 0;
+            }
+            10% { 
+                opacity: 1;
+            }
+            90% { 
+                opacity: 1;
+            }
+            100% { 
+                transform: translate(var(--endX), var(--endY)) rotate(360deg); 
+                opacity: 0;
+            }
+        }
+        
+        /* Cosmic system container */
+        .cosmic-system {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        /* Central heart (modified from sun) */
+        .central-heart {
+            position: absolute;
+            width: 140px;
+            height: 120px; /* Heart is slightly shorter than circle */
+            background: radial-gradient(ellipse at center, #ff6ec7, #ff1493, #ff6ec7);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            box-shadow: 0 0 60px #ff6ec7, 0 0 100px #ff1493;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            text-decoration: none; /* Remove underline */
+        }
+        
+        .central-heart:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 80px #ff6ec7, 0 0 130px #ff1493;
+        }
+        
+        .heart-note {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #fff;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(0,0,0,0.8);
+            font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+            line-height: 1.3;
+        }
+        
+        /* Celestial orbs (circular) */
+        .celestial-orb {
+            position: absolute;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            z-index: 5;
+            box-shadow: 0 0 25px var(--glow);
+        }
+        
+        .orb-content {
+            width: 90%;
+            height: 90%;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+            overflow: hidden;
+            font-size: 1.1rem;
+            line-height: 1.4;
+            color: var(--color);
+            backdrop-filter: blur(10px);
+            background: rgba(20, 15, 40, 0.7);
+        }
+        
+        /* Orb specific styles */
+        .orb-1 { --size: 70px; --color: #ff6ec7; --glow: rgba(255, 110, 199, 0.7); }
+        .orb-2 { --size: 80px; --color: #4da6ff; --glow: rgba(77, 166, 255, 0.7); }
+        .orb-3 { --size: 65px; --color: #9f4bff; --glow: rgba(159, 75, 255, 0.7); }
+        .orb-4 { --size: 75px; --color: #ff9a3d; --glow: rgba(255, 154, 61, 0.7); }
+        .orb-5 { --size: 60px; --color: #7cffb0; --glow: rgba(124, 255, 176, 0.7); }
+        .orb-6 { --size: 85px; --color: #ff5e9f; --glow: rgba(255, 94, 159, 0.7); }
+        
+        .celestial-orb {
+            width: var(--size);
+            height: var(--size);
+            background: radial-gradient(circle, var(--color), rgba(255,255,255,0.2));
+        }
+        
+        /* Animated icons inside orbs */
+        .animated-icon {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            animation: float 4s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* Expanded book styles */
+        .expanded-book {
+            position: fixed !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            width: 90vw !important;
+            height: 85vh !important;
+            z-index: 100 !important;
+            animation: expandBook 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            border-radius: 30px !important;
+            background: rgba(15, 10, 35, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 50px;
+            box-shadow: 0 0 60px var(--color);
+        }
+        
+        .book-content {
+            width: 90%;
+            text-align: center;
+            color: white;
+            font-size: 2.3rem;
+            line-height: 1.7;
+            overflow-y: auto;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 2.2rem;
+            transition: all 0.3s ease;
+            z-index: 101;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+        
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: rotate(90deg) scale(1.1);
+        }
+        
+        @keyframes expandBook {
+            0% {
+                transform: translate(-50%, -50%) scale(0.1);
+                opacity: 0;
+            }
+            70% {
+                transform: translate(-50%, -50%) scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+        
+        /* Particle explosion */
+        .particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99;
+        }
+        
+        /* Navigation */
+        .nav-container {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+        
+        .nav-link {
+            display: inline-block;
+            padding: 14px 35px;
+            background: linear-gradient(45deg, #ff6ec7, #9f4bff);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 25px rgba(159, 75, 255, 0.6);
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+            font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+        }
+        
+        .nav-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(159, 75, 255, 0.8);
+        }
+        
+        .nav-link i {
+            margin-right: 10px;
+        }
+        
+        /* Title */
+        .title {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 100;
+            font-size: 3.2rem;
+            background: linear-gradient(to right, #ff6ec7, #9f4bff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(159, 75, 255, 0.4);
+            font-weight: bold;
+            font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            color: #e0b0ff;
+            margin-top: 12px;
+            font-style: italic;
+            letter-spacing: 1px;
+            font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+        }
+        
+        /* Signature */
+        .signature {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            font-style: italic;
+            color: #d8bfd8;
+            font-size: 1.2rem;
+            text-align: right;
+            font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2.4rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .orb-content {
+                font-size: 0.95rem;
+                padding: 15px;
+            }
+            
+            .central-heart {
+                width: 110px;
+                height: 95px;
+            }
+            
+            .heart-note {
+                font-size: 1.1rem;
+            }
+            
+            .animated-icon {
+                font-size: 1.8rem;
+            }
+            
+            .expanded-book .book-content {
+                font-size: 1.8rem;
+                padding: 35px;
+            }
+            
+            .signature {
+                bottom: 80px;
+                right: 20px;
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .title {
+                font-size: 1.9rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .nav-link {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+            
+            .central-heart {
+                width: 90px;
+                height: 77px;
+            }
+            
+            .heart-note {
+                font-size: 0.9rem;
+            }
+            
+            .expanded-book .book-content {
+                font-size: 1.6rem;
+                padding: 25px;
+            }
+            
+            .close-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 1.7rem;
+            }
+            
+            .signature {
+                bottom: 70px;
+                right: 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Galactic background -->
+    <div class="galaxy-bg"></div>
+    
+    <!-- Space elements container -->
+    <div id="space-elements"></div>
+    
+    <!-- Starry background -->
+    <div class="stars" id="stars"></div>
+    
+    <!-- Title -->
+    <div class="title">
+        For My Dearest Atnasiya
+    </div>
+    <div class="subtitle">
+        From Yonas, With Eternal Love
+    </div>
+    
+    <!-- Cosmic System -->
+    <div class="cosmic-system">
+        <!-- Central heart with note - now links to your_love.html -->
+        <a href="your_love.html" class="central-heart" id="central-heart">
+            <div class="heart-note">
+                I love u<br>my noon
+            </div>
+        </a>
+        
+        <!-- Celestial orbs (circular) -->
+        <div class="celestial-orb orb-1" data-full-text="My dearest Atnasiya,<br><br>In all the vast universe, with its countless stars and galaxies, you are the one who makes my world meaningful. Your smile outshines every supernova, and your love is the gravity that holds my soul together.<br><br>Yonas">
+            <div class="orb-content">
+                <div class="animated-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <p>"My Atnasiya,<br>my universe"</p>
+            </div>
+        </div>
+        
+        <div class="celestial-orb orb-2" data-full-text="Beloved Atnasiya,<br><br>Our love story is written in the stars, across galaxies and through time. Like two cosmic travelers finding each other in the infinite expanse, we were destined to share this journey. Every moment with you feels like discovering a new constellation.<br><br>Forever yours,<br>Yonas">
+            <div class="orb-content">
+                <div class="animated-icon">
+                    <i class="fas fa-moon"></i>
+                </div>
+                <p>Our cosmic<br>love story</p>
+            </div>
+        </div>
+        
+        <div class="celestial-orb orb-3" data-full-text="My Atnasiya,<br><br>You are my North Star, guiding me through the darkest nights. When I feel lost in the void, your love illuminates my path. In your eyes, I see galaxies being born, and in your embrace, I find my home among the stars.<br><br>With all my heart,<br>Yonas">
+            <div class="orb-content">
+                <div class="animated-icon">
+                    <i class="fas fa-infinity"></i>
+                </div>
+                <p>You guide me<br>through the cosmos</p>
+            </div>
+        </div>
+        
+        <div class="celestial-orb orb-4" data-full-text="Dearest Atnasiya,<br><br>Like celestial bodies bound by gravity, we orbit each other in perfect harmony. Our love bends space and time, creating a universe where only we exist. In this cosmic dance, every touch is a supernova, and every kiss a new galaxy forming.<br><br>Your Yonas">
+            <div class="orb-content">
+                <div class="animated-icon">
+                    <i class="fas fa-kiss-wink-heart"></i>
+                </div>
+                <p>Our cosmic<br>harmony</p>
+            </div>
+        </div>
+        
+        <div class="celestial-orb orb-5" data-full-text="My Atnasiya,<br><br>We are stardust entwined, remnants of ancient supernovas reborn to find each other. Our love expands like the universe itself, growing more beautiful with each passing moment. In this vast cosmos, you are my only constant, my eternal truth.<br><br>Always,<br>Yonas">
+            <div class="orb-content">
+                <div class="animated-icon">
+                    <i class="fas fa-galaxy"></i>
+                </div>
+                <p>Stardust<br>entwined</p>
+            </div>
+        </div>
+        
+        <div class="celestial-orb orb-6" data-full-text="Atnasiya, my love,<br><br>You are my universe, my infinite possibility, my eternal now. In your presence, I experience the Big Bang - the moment when everything began and will continue forever. My love for you is the fundamental truth of my existence, written in the language of stars.<br><br>Yours for eternity,<br>Yonas">
+            <div class="orb-content">
+                <div class="animated-icon">
+                    <i class="fas fa-heart-circle-plus"></i>
+                </div>
+                <p>You are my<br>eternal universe</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Signature -->
+    <div class="signature">
+        Created with stardust and love<br>
+        by Yonas for Atnasiya
+    </div>
+    
+    <!-- Navigation -->
+    <div class="nav-container">
+        <a href="home.html" class="nav-link">
+            <i class="fas fa-home"></i> Go to Home
+        </a>
+    </div>
+    
+    <script>
+        // Create galactic elements
+        function createGalacticElements() {
+            const container = document.getElementById('space-elements');
+            const elements = [];
+            
+            // Create nebulas
+            for (let i = 0; i < 6; i++) {
+                const nebula = document.createElement('div');
+                nebula.classList.add('nebula');
+                nebula.style.width = `${250 + Math.random() * 350}px`;
+                nebula.style.height = `${200 + Math.random() * 300}px`;
+                nebula.style.left = `${Math.random() * 100}%`;
+                nebula.style.top = `${Math.random() * 100}%`;
+                nebula.style.opacity = 0.3 + Math.random() * 0.4;
+                nebula.style.background = getRandomNebulaColor();
+                elements.push(nebula);
+            }
+            
+            // Create black holes
+            for (let i = 0; i < 4; i++) {
+                const blackHole = document.createElement('div');
+                blackHole.classList.add('black-hole');
+                const size = 40 + Math.random() * 60;
+                blackHole.style.width = `${size}px`;
+                blackHole.style.height = `${size}px`;
+                blackHole.style.left = `${10 + Math.random() * 80}%`;
+                blackHole.style.top = `${10 + Math.random() * 80}%`;
+                elements.push(blackHole);
+            }
+            
+            // Create floating hearts
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('floating-heart');
+                heart.innerHTML = '<i class="fas fa-heart"></i>';
+                heart.style.left = `${5 + Math.random() * 90}%`;
+                heart.style.top = `${5 + Math.random() * 90}%`;
+                heart.style.fontSize = `${12 + Math.random() * 18}px`;
+                heart.style.animationDuration = `${12 + Math.random() * 18}s`;
+                heart.style.animationDelay = `${Math.random() * 5}s`;
+                elements.push(heart);
+            }
+            
+            // Create floating roses - using heart as rose alternative
+            for (let i = 0; i < 15; i++) {
+                const rose = document.createElement('div');
+                rose.classList.add('floating-rose');
+                rose.innerHTML = '<i class="fas fa-heart"></i>'; // Using heart instead of rose
+                rose.style.left = `${5 + Math.random() * 90}%`;
+                rose.style.top = `${5 + Math.random() * 90}%`;
+                rose.style.fontSize = `${14 + Math.random() * 20}px`;
+                rose.style.animationDuration = `${15 + Math.random() * 20}s`;
+                rose.style.animationDelay = `${Math.random() * 5}s`;
+                elements.push(rose);
+            }
+            
+            // Create heart comets
+            for (let i = 0; i < 12; i++) {
+                const heartComet = document.createElement('div');
+                heartComet.classList.add('heart-comet');
+                heartComet.innerHTML = '<i class="fas fa-heart"></i>';
+                heartComet.style.left = `${-10 - Math.random() * 20}%`;
+                heartComet.style.top = `${5 + Math.random() * 90}%`;
+                heartComet.style.fontSize = `${18 + Math.random() * 20}px`;
+                heartComet.style.setProperty('--angle', `${-20 - Math.random() * 30}deg`);
+                heartComet.style.setProperty('--endX', `${120 + Math.random() * 100}%`);
+                heartComet.style.setProperty('--endY', `${-50 + Math.random() * 100}%`);
+                heartComet.style.animationDelay = `${Math.random() * 5}s`;
+                heartComet.style.animationDuration = `${8 + Math.random() * 7}s`;
+                elements.push(heartComet);
+            }
+            
+            // Add all elements to container
+            elements.forEach(el => container.appendChild(el));
+        }
+        
+        function getRandomNebulaColor() {
+            const colors = [
+                'radial-gradient(circle, rgba(106, 90, 205, 0.35) 0%, transparent 70%)',
+                'radial-gradient(circle, rgba(138, 43, 226, 0.3) 0%, transparent 70%)',
+                'radial-gradient(circle, rgba(75, 0, 130, 0.4) 0%, transparent 70%)',
+                'radial-gradient(circle, rgba(255, 105, 180, 0.25) 0%, transparent 70%)',
+                'radial-gradient(circle, rgba(77, 166, 255, 0.28) 0%, transparent 70%)',
+                'radial-gradient(circle, rgba(255, 154, 61, 0.22) 0%, transparent 70%)'
+            ];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+        
+        // Create stars for background
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starCount = 600;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // Random position
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                star.style.left = `${x}%`;
+                star.style.top = `${y}%`;
+                
+                // Random size
+                const size = Math.random() * 2.5;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                
+                // Random opacity
+                const opacity = 0.3 + Math.random() * 0.7;
+                star.style.opacity = opacity;
+                
+                // Random animation
+                const duration = 2 + Math.random() * 6;
+                star.style.setProperty('--duration', `${duration}s`);
+                const delay = Math.random() * 5;
+                star.style.animationDelay = `${delay}s`;
+                
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // Animate celestial orbs using CSS variables
+        function animateOrbs() {
+            const orbs = document.querySelectorAll('.celestial-orb');
+            let angle = 0;
+            
+            function update() {
+                angle += 0.5;
+                
+                orbs.forEach(orb => {
+                    if (!orb.classList.contains('expanded')) {
+                        const orbitRadius = parseFloat(orb.getAttribute('data-orbit-radius'));
+                        const speed = parseFloat(orb.getAttribute('data-speed'));
+                        const currentAngle = angle * speed;
+                        
+                        const x = Math.cos(currentAngle * Math.PI / 180) * orbitRadius;
+                        const y = Math.sin(currentAngle * Math.PI / 180) * orbitRadius;
+                        
+                        orb.style.transform = `translate(${x}px, ${y}px)`;
+                    }
+                });
+                
+                requestAnimationFrame(update);
+            }
+            
+            update();
+        }
+        
+        // Create explosion effect
+        function createExplosion(x, y, color) {
+            const particleCount = 80;
+            const container = document.body;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.backgroundColor = color;
+                particle.style.left = `${x}px`;
+                particle.style.top = `${y}px`;
+                
+                // Random size
+                const size = 2 + Math.random() * 8;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random direction
+                const angle = Math.random() * Math.PI * 2;
+                const speed = 3 + Math.random() * 10;
+                const vx = Math.cos(angle) * speed;
+                const vy = Math.sin(angle) * speed;
+                
+                // Animation
+                let opacity = 1;
+                let posX = x;
+                let posY = y;
+                
+                const animate = () => {
+                    opacity -= 0.015;
+                    posX += vx;
+                    posY += vy;
+                    
+                    if (opacity > 0) {
+                        particle.style.opacity = opacity;
+                        particle.style.left = `${posX}px`;
+                        particle.style.top = `${posY}px`;
+                        requestAnimationFrame(animate);
+                    } else {
+                        particle.remove();
+                    }
+                };
+                
+                container.appendChild(particle);
+                requestAnimationFrame(animate);
+            }
+        }
+        
+        // Handle orb expansion to book
+        function setupOrbInteractions() {
+            const orbs = document.querySelectorAll('.celestial-orb');
+            
+            // Orb clicks
+            orbs.forEach(orb => {
+                orb.addEventListener('click', (e) => {
+                    // Get color for explosion
+                    const color = getComputedStyle(orb).getPropertyValue('--color');
+                    
+                    // Create explosion
+                    createExplosion(e.clientX, e.clientY, color);
+                    
+                    // Remove any existing expanded book
+                    const existing = document.querySelector('.expanded-book');
+                    if (existing) {
+                        existing.remove();
+                    }
+                    
+                    // Create expanded book
+                    const expandedBook = document.createElement('div');
+                    expandedBook.classList.add('expanded-book');
+                    expandedBook.style.setProperty('--color', color);
+                    
+                    const fullText = orb.getAttribute('data-full-text');
+                    const content = document.createElement('div');
+                    content.classList.add('book-content');
+                    content.innerHTML = `<p>${fullText}</p>`;
+                    
+                    const closeBtn = document.createElement('div');
+                    closeBtn.classList.add('close-btn');
+                    closeBtn.innerHTML = '&times;';
+                    closeBtn.addEventListener('click', () => {
+                        document.body.removeChild(expandedBook);
+                    });
+                    
+                    expandedBook.appendChild(content);
+                    expandedBook.appendChild(closeBtn);
+                    document.body.appendChild(expandedBook);
+                });
+            });
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            createGalacticElements();
+            createStars();
+            
+            // Add orbit data attributes to orbs
+            const orbs = document.querySelectorAll('.celestial-orb');
+            orbs.forEach((orb, index) => {
+                const speed = 0.7 + (index * 0.2);
+                const orbitRadius = 180 + index * 60;
+                orb.setAttribute('data-speed', speed.toString());
+                orb.setAttribute('data-orbit-radius', orbitRadius.toString());
+            });
+            
+            animateOrbs();
+            setupOrbInteractions();
+        });
+    </script>
+</body>
+</html>
+
